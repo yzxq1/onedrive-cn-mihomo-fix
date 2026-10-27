@@ -1,0 +1,19 @@
+# OneDrive 混合分流（mihomo / Clash override）
+# 控制面被 GFW SNI 阻断 → 走节点（流量极小，仅鉴权/元数据）
+# 数据面直连实测可用 → DIRECT（大文件不烧节点流量）
+#
+# 用法（mihomo-party / Clash.Meta YAML 覆写）：
+#   把 "🚀 节点选择" 换成你自己的节点或代理组名。
+#   "+rules" 会把这些规则前置到配置内置规则之前，确保先命中。
+
++rules:
+  # —— 控制面：直连 TLS 被 SNI 重置，必须走节点 ——
+  - DOMAIN-SUFFIX,onedrive.live.com,🚀 节点选择   # 含 skyapi.onedrive.live.com
+  - DOMAIN,api.onedrive.com,🚀 节点选择
+
+  # —— 数据面：直连实测可用，强制 DIRECT，不烧节点流量 ——
+  - DOMAIN-SUFFIX,microsoftpersonalcontent.com,DIRECT
+  - DOMAIN-SUFFIX,files.1drv.com,DIRECT
+  - DOMAIN-SUFFIX,up.1drv.com,DIRECT
+  - DOMAIN-SUFFIX,storage.live.com,DIRECT
+  - DOMAIN-SUFFIX,livefilestore.com,DIRECT
